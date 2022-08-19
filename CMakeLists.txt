@@ -66,7 +66,17 @@ set( KNOWHERE_THIRDPARTY_SRC ${PROJECT_SOURCE_DIR}/thirdparty )
 # This will set RPATH to all excutable TARGET
 # self-installed dynamic libraries will be correctly linked by executable
 include( GNUInstallDirs )
-set( CMAKE_INSTALL_RPATH "/usr/lib" "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}" )
+# set(OMP_PATH /opt/intel/oneapi/compiler/2022.0.2/linux/compiler/lib/intel64_lin/)
+# set(MKL_ROOT /opt/intel/oneapi/mkl/latest)
+
+# link_directories(${OMP_PATH} ${MKL_ROOT}/lib/intel64)
+# include_directories(${MKL_ROOT}/include)
+
+# # expected path for apt packaged intel mkl installs
+# link_directories(/usr/lib/x86_64-linux-gnu/mkl)
+# include_directories(/usr/include/mkl)
+# set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${MKL_ROOT}/lib/intel64:${OMP_PATH})
+set( CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} "/usr/lib" "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}" )
 set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE )
 
 set( CMAKE_CUDA_COMPILER  "/usr/local/cuda/bin/nvcc" )

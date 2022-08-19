@@ -135,7 +135,6 @@ if (KNOWHERE_SUPPORT_NSG)
 endif ()
 
 set(depend_libs
-        faiss
         pthread
         knowhere_utils
         )
@@ -154,12 +153,15 @@ if (KNOWHERE_SUPPORT_NGT)
             )
 endif ()
 
+link_directories(${KNOWHERE_SOURCE_DIR}/output/lib)
+
 if (KNOWHERE_WITH_DISKANN)
       set(depend_libs
              ${depend_libs}
              diskann
-             aio
-             ${MKL_LIBRARIES}
+                #   ${MKL_LIBRARIES}
+        #      aio
+                faiss
              )
 endif()
 

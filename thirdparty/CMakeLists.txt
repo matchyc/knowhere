@@ -152,6 +152,8 @@ macro(build_diskann)
     set( DISKANN_INCLUDE_DIR "${DISKANN_PREFIX}/include" )
     set( DISKANN_STATIC_LIB
             "${DISKANN_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}diskann${CMAKE_STATIC_LIBRARY_SUFFIX}" )
+    set( DISKANN_DYNAMIC_LIB 
+            "${DISKANN_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}diskann${CMAKE_SHARED_LIBRARY_SUFFIX}" )
     set( DISKANN_CMAKE_ARGS
             "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
             "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
@@ -178,7 +180,8 @@ macro(build_diskann)
         set_target_properties( diskann
         PROPERTIES
             IMPORTED_GLOBAL                 TRUE
-            IMPORTED_LOCATION               "${DISKANN_STATIC_LIB}"
+            # IMPORTED_LOCATION               "${DISKANN_STATIC_LIB}"
+            IMPORTED_LOCATION               "${DISKANN_DYNAMIC_LIB}"
             INTERFACE_INCLUDE_DIRECTORIES   "${DISKANN_INCLUDE_DIR}")
 
         target_link_libraries( diskann INTERFACE knowhere_utils )

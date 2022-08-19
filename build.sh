@@ -136,5 +136,5 @@ if [[ ${RUN_CPPLINT} == "ON" ]]; then
 #  echo "clang-tidy check passed!"
 else
   # compile and build
-  make -j 8 install || exit 1
+  make VERBOSE=1 -j 8 install || exit 1
 fi

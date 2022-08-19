@@ -48,29 +48,7 @@ set( ALL_INDEXING_SRCS
         test_common.cpp
         )
 
-set(ALL_INDEXING_SRCS
-        ${ALL_INDEXING_SRCS}
-        test_annoy.cpp
-        test_binaryidmap.cpp
-        test_binaryivf.cpp
-        test_bruteforce.cpp
-        test_hnsw.cpp
-        test_idmap.cpp
-        test_ivf.cpp
-        test_ivf_nm.cpp
-        test_ivf_hnsw.cpp
-        test_rhnsw.cpp
-        test_vecindex.cpp
-        )
-
-if ( LINUX OR MSYS )
-    set(ALL_INDEXING_SRCS
-            ${ALL_INDEXING_SRCS}
-            test_instructionset.cpp
-            )
-endif()
-
-if ( KNOWHERE_WITH_DISKANN ) 
+        if ( KNOWHERE_WITH_DISKANN ) 
     set(ALL_INDEXING_SRCS
             ${ALL_INDEXING_SRCS}
             test_diskann.cpp
@@ -80,6 +58,30 @@ if ( KNOWHERE_WITH_DISKANN )
             stdc++fs
             )
 endif ()
+
+set(ALL_INDEXING_SRCS
+        ${ALL_INDEXING_SRCS}
+        # test_annoy.cpp
+        # test_binaryidmap.cpp
+        # test_binaryivf.cpp
+        # test_bruteforce.cpp
+        # test_hnsw.cpp
+        # test_idmap.cpp
+        # test_ivf.cpp
+        # test_ivf_nm.cpp
+        # test_ivf_hnsw.cpp
+        # test_rhnsw.cpp
+        # test_vecindex.cpp
+        )
+
+if ( LINUX OR MSYS )
+    set(ALL_INDEXING_SRCS
+            ${ALL_INDEXING_SRCS}
+            test_instructionset.cpp
+            )
+endif()
+
+
 
 if ( KNOWHERE_GPU_VERSION )
     set(ALL_INDEXING_SRCS
