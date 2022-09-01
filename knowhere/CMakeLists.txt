@@ -86,6 +86,11 @@ if (KNOWHERE_WITH_DISKANN)
              )
 endif()
 
+set(depend_libs 
+        ${depend_libs}
+        folly
+        )
+
 if (KNOWHERE_GPU_VERSION)
     include_directories(${CUDA_INCLUDE_DIRS})
     link_directories("${CUDA_TOOLKIT_ROOT_DIR}/lib64")

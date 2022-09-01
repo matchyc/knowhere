@@ -195,6 +195,60 @@ if ( KNOWHERE_WITH_DISKANN AND NOT TARGET diskann_ep )
     link_directories( SYSTEM  "${DISKANN_PREFIX}/${CMAKE_INSTALL_LIBDIR}/" )
 endif()
 
+# ****************************** Thirdparty Folly ***************************************
+
+set ( FOLLY_VERSION v2022.08.29.00 )
+if ( DEFINED ENV{MILVUS_FOLLY_URL} )
+    set( FOLLY_SOURCE_URL "$ENV{MILVUS_FOLLY_URL}" )
+else()
+    set( FOLLY_SOURCE_URL "https://github.com/facebook/folly/releases/download/${FOLLY_VERSION}/folly-${FOLLY_VERSION}.tar.gz" )
+endif()
+
+message( STATUS "Building folly-${FOLLY_VERSION} from source" )
+
+set( FOLLY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/folly )
+set( FOLLY_PREFIX "${CMAKE_INSTALL_PREFIX}" )
+set( FOLLY_INCLUDE_DIR "${FOLLY_PREFIX}/include" )
+set( FOLLY_INSTALLED_DIR "${FOLLY_SOURCE_DIR}/installed/folly" )
+set( FOLLY_OUTPUT_DIR "${FOLLY_PREFIX}/${CMAKE_INSTALL_LIBDIR}/")
+ExternalProject_Add( folly_ep
+    # GIT_REPOSITORY https://github.com/facebook/folly.git
+    # GIT_TAG main
+    URL "${FOLLY_SOURCE_URL}"
+    # URL_MD5 "0b6de34c0ca84a4f89d72a3380de9391"
+    BINARY_DIR ${FOLLY_SOURCE_DIR}
+    SOURCE_DIR ${FOLLY_SOURCE_DIR}
+    # CMAKE_ARGS "-DCMAKE_CXX_FLAGS= -I ${FOLLY_SOURCE_DIR} -I ${FOLLY_INSTALLED_DIR}"
+    # PATCH_COMMAND bash /build/fbcode_builder/getdeps.py install-system-deps --recursive folly
+    CONFIGURE_COMMAND python3 ${FOLLY_SOURCE_DIR}/build/fbcode_builder/getdeps.py --scratch-path=${FOLLY_SOURCE_DIR} --allow-system-packages -v build folly --extra-b2-args=cxxflags=-fPIC --no-test --extra-cmake-defines={"CMAKE_POSITION_INDEPENDENT_CODE":"ON"}
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    BUILD_ALWAYS 1)
+
+
+ExternalProject_Add_StepDependencies( folly_ep configure knowhere_utils )
+
+add_library( folly STATIC IMPORTED )
+
+set_target_properties( folly
+    PROPERTIES
+        IMPORTED_GLOBAL                 TRUE
+        IMPORTED_LOCATION               "${FOLLY_OUTPUT_DIR}folly/${CMAKE_STATIC_LIBRARY_PREFIX}folly${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        INTERFACE_INCLUDE_DIRECTORIES   "${FOLLY_INCLUDE_DIR}")
+
+target_link_libraries( folly INTERFACE knowhere_utils )
+add_dependencies( folly folly_ep )
+
+install(DIRECTORY "${FOLLY_INSTALLED_DIR}/include/folly"
+        DESTINATION "include"
+        FILES_MATCHING
+        PATTERN "*.h"
+        )
+
+install(DIRECTORY "${FOLLY_INSTALLED_DIR}/lib/"
+        DESTINATION "lib/folly"
+        )
+
 install(DIRECTORY "${KNOWHERE_SOURCE_DIR}/thirdparty/annoy/"
         DESTINATION "include/annoy"
         FILES_MATCHING
